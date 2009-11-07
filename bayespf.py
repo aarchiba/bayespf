@@ -33,7 +33,6 @@ def infer(events):
     p = np.exp(lpdf - mx)/np.average(np.exp(lpdf-mx))
     
     S = np.average(np.exp(lpdf))
-    print S
 
     return phases, fractions, p, S/(S+1)
 
