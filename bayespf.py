@@ -17,9 +17,7 @@ def generate(fraction, phase, n):
     return r
 
 
-def infer(events):
-    n_phase = 200
-    n_frac = 201
+def infer(events, n_phase=200, n_frac=201):
 
     events = np.asarray(events)
     phases = np.linspace(0,1,n_phase,endpoint=False)
