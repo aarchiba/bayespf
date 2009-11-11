@@ -32,8 +32,7 @@ def infer(events, n_phase=200, n_frac=201):
     
     S = np.average(np.exp(lpdf))
 
-    return phases, fractions, p, S/(S+1)
-
+    return phases, fractions, p, (S/(S+1))
 
 if __name__=='__main__':
     import pylab as pl
@@ -51,6 +50,7 @@ if __name__=='__main__':
     p = np.average(r,axis=0)
     li, mi, ui = np.searchsorted(np.cumsum(p)/np.sum(p), [scipy.stats.norm.cdf(-1), 0.5, scipy.stats.norm.cdf(1)])
     pl.plot(fractions, p)
+
     pl.xlabel("Pulsed fraction")
     pl.ylabel("Probability")
     pl.axvline(fractions[li])
