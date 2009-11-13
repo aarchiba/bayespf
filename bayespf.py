@@ -37,7 +37,7 @@ def infer(events, n_phase=200, n_frac=201):
 if __name__=='__main__':
     import pylab as pl
     
-    events = generate(0.05,0.5,8000)
+    events = generate(0.3,0.5,200)
     phases, fractions, r, P = infer(events)
     print "Probability the signal is pulsed: %f" % P
 
@@ -45,10 +45,13 @@ if __name__=='__main__':
     pl.contourf(fractions, phases, r)
     pl.xlabel("Pulsed fraction")
     pl.ylabel("Phase")
+    pl.xlim(0,1)
+    pl.ylim(0,1)
 
     pl.subplot(212)
     p = np.average(r,axis=0)
-    li, mi, ui = np.searchsorted(np.cumsum(p)/np.sum(p), [scipy.stats.norm.cdf(-1), 0.5, scipy.stats.norm.cdf(1)])
+    li, mi, ui = np.searchsorted(np.cumsum(p)/np.sum(p), 
+            [scipy.stats.norm.cdf(-1), 0.5, scipy.stats.norm.cdf(1)])
     pl.plot(fractions, p)
 
     pl.xlabel("Pulsed fraction")
@@ -56,6 +59,7 @@ if __name__=='__main__':
     pl.axvline(fractions[li])
     pl.axvline(fractions[mi])
     pl.axvline(fractions[ui])
-    print "Pulsed fraction: %f [%f, %f]" % (fractions[mi], fractions[li], fractions[ui])
+    print ("Pulsed fraction: %f [%f, %f]" % 
+            (fractions[mi], fractions[li], fractions[ui]))
 
     pl.show()
