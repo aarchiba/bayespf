@@ -5,27 +5,26 @@ import bayespf
 
 def test_credible_interval():
 
-    M = 50
-    N = 100
-    p_edge = 0.1
+    M = 200
+    N = 30
 
-
-    in_interval_f = 0
+    ps = []
     for i in range(M):
         f, p = np.random.rand(2)
         
         events = bayespf.generate(f, p, N)
 
-        phases, fractions, r, P = bayespf.infer(events, n_phase=200, n_frac=401)
+        phases, fractions, r, P = bayespf.infer(events)
 
         frac_pdf = np.average(r,axis=0)
-        lfi, ufi = np.searchsorted(np.cumsum(frac_pdf)/np.sum(frac_pdf), 
-                [p_edge, 1-p_edge])
+        fi = np.searchsorted(fractions, f/2)
+        p = np.sum(frac_pdf[:fi])/np.sum(frac_pdf)
+        p = 2*min(p, 1-p)
 
-        if fractions[lfi]<=f and (ufi==len(fractions) or f<fractions[ufi]):
-            in_interval_f += 1
+        ps.append(p)
 
-    assert 0.01<scipy.stats.binom(M,1-2*p_edge).cdf(in_interval_f)<0.99
+
+    assert scipy.stats.kstest(ps,lambda x: x)[1] > 0.01
 
 def test_pulsed_probability():
     np.random.seed(0)
